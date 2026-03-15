@@ -48,10 +48,16 @@ import org.asteroid.controls 1.0
 */
 ListRow {
     /*!
-        \qmlproperty string LabeledActionButton::icon
-        The icon name to display on the right side of the row.
-    */
+     \qmlproperty string Labeled*ActionButton::icon
+     The icon name to display on the right side of the row.
+     */
     property string icon: ""
+
+    /*!
+     \qmlproperty string Labeled*ActionButton::text
+     The descriptive label text displayed on the left side of the row.
+     */
+    property alias text: label.text
 
     Connections {
         target: actionArea
@@ -71,5 +77,19 @@ ListRow {
             width: iconSize
             height: iconSize
         }
+    }
+
+    Label {
+        id: label
+        anchors {
+            left: parent.left
+            leftMargin: rowMargin
+            right: parent.right
+            verticalCenter: parent.verticalCenter
+        }
+        font.pixelSize: labelFontSize
+        verticalAlignment: Text.AlignVCenter
+        wrapMode: Text.Wrap
+        height: parent.height
     }
 }
