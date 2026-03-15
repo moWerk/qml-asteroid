@@ -1,8 +1,8 @@
 /*
- * Copyright (C) 2023 - Timo Könnecke <github.com/eLtMosen>
- * Copyright (C) 2022 - Ed Beroset <github.com/beroset>
- * Copyright (C) 2020 - Darrel Griët <idanlcontact@gmail.com>
- * Copyright (C) 2015 - Florent Revest <revestflo@gmail.com>
+ * Copyright (C) 2026 - Timo Könnecke  <github.com/eLtMosen>
+ *               2022 - Ed Beroset     <github.com/beroset>
+ *               2020 - Darrel Griët   <idanlcontact@gmail.com>
+ *               2015 - Florent Revest <revestflo@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,19 +27,19 @@ import org.asteroid.controls 1.0
 
     \brief A control to select an integer value from a range.
 
-    This control allows the user to select an integer value by 
+    This control allows the user to select an integer value by
     clicking on an associated left icon or right icon.  By default
-    the range is from \l min to \l max with a given \l stepSize 
+    the range is from \l min to \l max with a given \l stepSize
     which is the increment added or subtracted for each icon press.
 
     Here is a short example that shows two \l IntSelector controls.
     The top one uses mostly defaults and sets the value to 50%, incrementing
-    or decrementing 10% at each step.  The lower one uses a range of -10 
+    or decrementing 10% at each step.  The lower one uses a range of -10
     to +10 mV and starts at a value of -3, incrementing or decrementing
     by 1 mV each step.
 
     \qml
-    import QtQuick 2.0
+    import QtQuick 2.9
     import org.asteroid.controls 1.0
 
     Item {
@@ -62,30 +62,21 @@ import org.asteroid.controls 1.0
     \endqml
 */
 
-Item {
+ListRow {
     /*! minimum allowed value.  Default is 0 */
     property int min: 0
     /*! maximum allowed value. Default is 100 */
     property int max: 100
-    /*! step size per button actuatio. Default is 10 */
+    /*! step size per button actuation. Default is 10 */
     property int stepSize: 10
-    /*! unitMarker value appended to value display between button. Default is % */
+    /*! unitMarker value appended to value display between buttons. Default is % */
     property string unitMarker: "%"
     /*! initial value of the control. Default is 0 */
     property int value: 0
-    /*! left and right margin for the row content */
-    property int rowMargin: Dims.w(15)
-    /*! size of the icon/s */
-    property int iconSize: Dims.l(20)
-    /*! size of the label text */
-    property int labelFontSize: Dims.l(6)
     /*! whether the actual value should be shown */
     property bool valueLabelVisible: true
 
-    /*! width defaults to parent's width */
-    width: parent.width
-    /*! height defaults to parent's height */
-    height: parent.height
+    highlightBarEnabled: false
 
     IconButton {
         id: buttonLeft
@@ -100,40 +91,38 @@ Item {
         width: height
         onClicked: {
             var newVal = value - stepSize
-            if(newVal < min) newVal = min
+            if (newVal < min) newVal = min
             value = newVal
         }
     }
 
     Label {
-        text: value + unitMarker
         anchors {
             left: buttonLeft.right
-            right: buttonRight.left
+            right: parent.right
+            leftMargin: actionSlotPadding
+            verticalCenter: parent.verticalCenter
         }
         font.pixelSize: labelFontSize
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
         wrapMode: Text.Wrap
         height: parent.height
+        text: value + unitMarker
         visible: valueLabelVisible
     }
 
-    IconButton {
-        id: buttonRight
-
-        iconName: "ios-add-circle-outline"
-        anchors {
-            right: parent.right
-            rightMargin: rowMargin
-            verticalCenter: parent.verticalCenter
-        }
-        height: iconSize
-        width: height
-        onClicked: {
-            var newVal = value + stepSize
-            if(newVal > max) newVal = max
-            value = newVal
+    actionComponent: Item {
+        IconButton {
+            anchors.centerIn: parent
+            iconName: "ios-add-circle-outline"
+            height: iconSize
+            width: height
+            onClicked: {
+                var newVal = value + stepSize
+                if (newVal > max) newVal = max
+                value = newVal
+            }
         }
     }
 }
